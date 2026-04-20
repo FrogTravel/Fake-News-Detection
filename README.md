@@ -17,8 +17,8 @@ The solution follows the classic two-level stacking pattern, with a strict separ
 
 ```
              ┌───────────────────────────────────────────────────────────────┐
-             │                    training_data.csv                         │
-             │                    testing_data.csv                          │
+             │                    training_data.csv                          │
+             │                    testing_data.csv                           │
              └───────────────────────────────┬───────────────────────────────┘
                                              │
                        ┌─────────────────────┼─────────────────────┐
@@ -33,30 +33,30 @@ The solution follows the classic two-level stacking pattern, with a strict separ
                                              │
              ┌───────────────────────────────▼───────────────────────────────┐
              │                LEVEL 0  —  35 base learners                   │
-             │                                                              │
-             │   Linear / NB / Tree     Neural (PyTorch)     Transformer    │
-             │   LogReg, LinearSVC,     MLP_small/medium,    DistilBERT_1   │
-             │   SGD, Ridge, NB,        TextCNN, BiLSTM      DistilBERT_2   │
-             │   RF, GBM, Stacking                           DistilBERT_3ep │
-             │                                                              │
-             │   Each model is trained with 5-fold StratifiedKFold          │
-             │   → produces one OOF prob vector + one test prob vector      │
+             │                                                               │
+             │   Linear / NB / Tree     Neural (PyTorch)     Transformer     │
+             │   LogReg, LinearSVC,     MLP_small/medium,    DistilBERT_1    │
+             │   SGD, Ridge, NB,        TextCNN, BiLSTM      DistilBERT_2    │
+             │   RF, GBM, Stacking                           DistilBERT_3ep  │
+             │                                                               │
+             │   Each model is trained with 5-fold StratifiedKFold           │
+             │   → produces one OOF prob vector + one test prob vector       │
              └───────────────────────────────┬───────────────────────────────┘
                                              │
                                              │   oofs/<MODEL>.csv       (test preds)
                                              │   oofs/<MODEL>_oof.csv   (OOF preds)
                                              ▼
-             ┌───────────────────────────────────────────────────────────────┐
-             │              LEVEL 1  —  meta-learner (ensemble.ipynb)        │
-             │                                                              │
-             │   X_meta_train = [oof_probs_model_1, ..., oof_probs_model_35]│
+             ┌────────────────────────────────────────────────────────────────┐
+             │              LEVEL 1  —  meta-learner (ensemble.ipynb)         │
+             │                                                                │
+             │   X_meta_train = [oof_probs_model_1, ..., oof_probs_model_35]  │
              │   X_meta_test  = [test_probs_model_1, ..., test_probs_model_35]│
-             │                                                              │
-             │   StackingClassifier(                                        │
-             │       estimators=[LogReg, MultinomialNB, RandomForest],      │
-             │       final_estimator=LogReg                                 │
-             │   )                                                          │
-             └───────────────────────────────┬───────────────────────────────┘
+             │                                                                │
+             │   StackingClassifier(                                          │
+             │       estimators=[LogReg, MultinomialNB, RandomForest],        │
+             │       final_estimator=LogReg                                   │
+             │   )                                                            │
+             └───────────────────────────────┬────────────────────────────────┘
                                              │
                                              ▼
                                   final_submission.csv
